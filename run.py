@@ -4,6 +4,9 @@ import json, csv
 from time import time
 from random import random
 from flask import Flask, render_template, make_response
+# import numpy as np
+# import matplotlib.pyplot as plt
+
 app = Flask(__name__)
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,8 +23,10 @@ def data():
     # Data Format
     # [TIME, TemperatureS, TemperatureN]
 
+# @app.route('graph_example')
+
     TemperatureS = choice((-55, -52))
-    TemperatureN = choice((-14, -10))
+    TemperatureN = choice((-12, -10))
 
     data = [time() * 1000, TemperatureS, TemperatureN]
 

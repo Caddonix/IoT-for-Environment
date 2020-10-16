@@ -1,10 +1,14 @@
 from flask import Flask, render_template, url_for, request, redirect, make_response
 from random import choice
-import json
+import json, csv
 from time import time
 from random import random
 from flask import Flask, render_template, make_response
 app = Flask(__name__)
+import matplotlib.pyplot as plt
+import numpy as np
+
+north_pole = csv.reader("")
 
 @app.route('/', methods=["GET", "POST"])
 def main():
@@ -29,4 +33,4 @@ def data():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)

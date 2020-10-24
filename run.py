@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from pandas import read_csv
+import pandas as pd
 from flask import Flask, render_template, url_for, request, redirect, make_response
 from random import choice, random
 import json
@@ -10,10 +10,10 @@ from io import BytesIO
 import base64
 
 # complete dataset of North Pole
-north_pole = read_csv('assets/N_seaice_extent_daily_v3.0.csv')
+north_pole = pd.read_csv('assets/N_seaice_extent_daily_v3.0.csv')
 
 # complete dataset of South Pole
-south_pole = read_csv('assets/S_seaice_extent_daily_v3.0.csv')
+south_pole = pd.read_csv('assets/S_seaice_extent_daily_v3.0.csv')
 
 months = [None, "Jan", "Feb", "Mar", "Apr", "May",
           "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -21,30 +21,41 @@ months = [None, "Jan", "Feb", "Mar", "Apr", "May",
 
 @app.route('/', methods=["GET", "POST"])
 def main():
-    return render_template('index.html')
-    # url = '/static/images/ice_caps_pseudo.jpg'
-    # figdata_png = None
-    # if request.method == 'POST':
-    #     year = request.form.get("year")
-    #     month = request.form.get("month")
-    #     month_name = months[int(month)]
-    #     pole = request.form.get("pole")
+    data_north = []
+    data_south = []
+    if request.method == 'POST':
+        year = request.form.get("year")
+        month = request.form.get("month")
+        month_name = months[int(month)]
 
         # year wise dataset of North Pole including month of years and extent of ice
-        # north_data_year = north_pole.loc[north_pole["Year"] == year]
+        north_data_year = north_pole.loc[north_pole["Year"]==year]
 
         # year wise dataset of South Pole including month of years and extent of ice
-        # south_data_year = south_pole.loc[south_pole["Year"] == year]
+        south_data_year = south_pole.loc[south_pole["Year"]==year]
 
-        # month wise dataset of North Pole including day of month and extent of ice
-        # north_data_month = north_data_year.loc[north_data_year["Month"] == month, [
-        #     "Day", "Extent"]]
+        #month wise dataset of North Pole including day of month and extent of ice
+        north_data_month = north_data_year.loc[north_data_year["Month"]==month, ["Extent"]]
 
-        # month wise dataset of South Pole including day of month and extent of ice
-        # south_data_month = south_data_year.loc[south_data_year["Month"] == month, [
-        #     "Day", "Extent"]]
+        #month wise dataset of South Pole including day of month and extent of ice
+        south_data_month = south_data_year.loc[south_data_year["Month"]==month, ["Extent"]]
+
+        n = pd.Series(north_data_month["Extent"]).reset_index(drop=True)
+        s = pd.Series(south_data_month["Extent"]).reset_index(drop=True)
+        data_north = []
+        data_south = []
+
+        for i in range(len(n)):
+            a = [i, float(n[i])]
+            b = [i, float(s[i])]
+            data_north.append(a)
+            data_south.append(b)
+
+    return render_template('index.html', north = data_north, south = data_south, year=year, month_name=month_name)
+        
 
         # if(pole == 'N' or pole == 'n'):
+            
             # plot for month wise data at North Pole
             # plt.plot(north_data_month["Day"],
             #          north_data_month["Extent"], color='r')

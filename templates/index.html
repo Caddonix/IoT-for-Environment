@@ -34,7 +34,7 @@
     <script type="text/javascript" src="http://pubnub.github.io/eon/lib/eon.js"></script>
 
     <style>
-        .graphs{
+        .graphs {
             padding: 5%;
         }
     </style>
@@ -83,47 +83,82 @@
     <br>
     <br>
     <br>
-    <div class="container">
-        <div class="row">
-            <div class="graphs">
-                <!-- <form name="sentMessage" id="contactForm" action="/" method="POST" validate>
-                    <div class="control-group">
-                        <div class="form-group floating-label-form-group controls">
-                            <label>Year</label>
-                            <input type="text" class="form-control" placeholder="Eg. 1990" name="year" id="year"
-                                required data-validation-required-message="Please enter Year">
-                            <p class="help-block text-danger"></p>
-                        </div>
+    <div class="container" style="text-align: center;">
+        <div class="graphs">
+            <b>Rules to Search:</b>
+            <br>1. Enter the year in numerical format, between 1980 to 2020
+            <br>2. Enter month number, (only till 9th month of 2020)
+            <br><br>
+            <form name="sentMessage" id="contactForm" action="/" method="POST" validate>
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <!-- <label>Year</label> -->
+                        <input type="text" class="form-control" placeholder="Year Eg. 1990" name="year" id="year" required
+                            data-validation-required-message="Please enter Year">
+                        <p class="help-block text-danger"></p>
                     </div>
-                    <div class="control-group">
-                        <div class="form-group floating-label-form-group controls">
-                            <label>Month</label>
-                            <input type="text" class="form-control" placeholder="Eg. for Oct type 10" name="month"
-                                id="month" required data-validation-required-message="Please enter Month">
-                            <p class="help-block text-danger"></p>
-                        </div>
+                </div>
+                <div class="control-group">
+                    <div class="form-group floating-label-form-group controls">
+                        <!-- <label>Month</label> -->
+                        <input type="text" class="form-control" placeholder="Month Eg. for Oct type 10" name="month"
+                            id="month" required data-validation-required-message="Please enter Month">
+                        <p class="help-block text-danger"></p>
                     </div>
-                    <div class="control-group">
-                        <div class="form-group floating-label-form-group controls">
-                            <label>Pole</label>
-                            <input type="text" class="form-control" placeholder="N for North, S for South" name="pole"
-                                id="pole" required data-validation-required-message="Please enter Pole">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div id="success"></div>
-                    <button type="submit" class="btn btn-primary" id="sendMessageButton"> Submit </button>
-                </form> -->
+                </div>
 
-                <img src="static\images\north_2020_9.png" alt="Graph" width="100%">
+                <div id="success"></div>
+                <button type="submit" class="btn btn-primary" id="sendMessageButton"> Display Graphs </button>
+            </form>
+
+            <!-- <img src="static\images\north_2020_9.png" alt="Graph" width="100%">
                 <br><br>
-                <img src="static\images\south_2020_9.png" alt="Graph" width="100%">
-
-
-
-            </div>
+                <img src="static\images\south_2020_9.png" alt="Graph" width="100%"> -->
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <br><br><br>
+            <b><p>North Pole Graph - {{month_name}} {{year}} </p></b>
+            <div id="chart_north"></div>
+            <br><br>
+            <b><p>South Pole Graph - {{month_name}} {{year}}</p></b>
+            <div id="chart_south" width="100%"></div>
         </div>
     </div>
+
+
+    <script>
+        google.charts.load('current', { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawBasic);
+
+        function drawBasic() {
+
+            var data1 = new google.visualization.DataTable();
+            data1.addColumn('number', 'Day');
+            data1.addColumn('number', 'Extent');
+
+            data1.addRows({{ north }});
+
+        var data2 = new google.visualization.DataTable();
+        data2.addColumn('number', 'Day');
+        data2.addColumn('number', 'Extent');
+
+        data2.addRows({{ south }});
+
+        var options = {
+            hAxis: {
+                title: 'Days of Month'
+            },
+            vAxis: {
+                title: 'Extent (10^6 Sq. Km)'
+            }
+        };
+
+        var chart1 = new google.visualization.LineChart(document.getElementById('chart_north'));
+        var chart2 = new google.visualization.LineChart(document.getElementById('chart_south'));
+
+        chart1.draw(data1, options);
+        chart2.draw(data2, options);
+        }
+    </script>
 
 
 

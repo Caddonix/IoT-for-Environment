@@ -1,13 +1,9 @@
-import matplotlib.pyplot as plt
 import pandas as pd
 from flask import Flask, render_template, url_for, request, redirect, make_response
 from random import choice, random
 import json
 from time import time
-from flask import Flask, render_template, make_response
 app = Flask(__name__)
-from io import BytesIO
-import base64
 
 # complete dataset of North Pole
 north_pole = pd.read_csv('assets/N_seaice_extent_daily_v3.0.csv')
@@ -21,6 +17,9 @@ months = [None, "Jan", "Feb", "Mar", "Apr", "May",
 
 @app.route('/', methods=["GET", "POST"])
 def main():
+    year = None
+    month = None
+    month_name = None
     data_north = []
     data_south = []
     if request.method == 'POST':
